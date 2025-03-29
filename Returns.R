@@ -59,7 +59,7 @@ monthly_returns_df <- calculate_monthly_returns(msci_data)
 annual_returns_df <- calculate_annual_returns(msci_data)
 
 # Plot monthly returns
-jpeg("monthly_returns_plot.jpg", width = 1920, height = 1080)
+jpeg("img/monthly_returns_plot.jpg", width = 1920, height = 1080)
 plot(monthly_returns_df$Date, monthly_returns_df[[2]], type = "l", col = "blue",
      xlab = "Date", ylab = "Monthly Returns (%)", main = "Monthly Returns")
 for (i in 3:ncol(monthly_returns_df)) {
@@ -69,7 +69,7 @@ legend("topright", legend = names(monthly_returns_df)[-1], col = 2:ncol(monthly_
 dev.off()
 
 # Plot annual returns
-jpeg("annual_returns_plot.jpg", width = 1920, height = 1080)
+jpeg("img/annual_returns_plot.jpg", width = 1920, height = 1080)
 plot(annual_returns_df$Date, annual_returns_df[[2]], type = "l", col = "blue",
      xlab = "Date", ylab = "Annual Returns (%)", main = "Annual Returns")
 for (i in 3:ncol(annual_returns_df)) {
@@ -77,3 +77,4 @@ for (i in 3:ncol(annual_returns_df)) {
 }
 legend("topright", legend = names(annual_returns_df)[-1], col = 2:ncol(annual_returns_df), lty = 1)
 dev.off()
+
