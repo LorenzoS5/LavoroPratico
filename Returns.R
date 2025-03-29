@@ -58,23 +58,93 @@ calculate_annual_returns <- function(data) {
 monthly_returns_df <- calculate_monthly_returns(msci_data)
 annual_returns_df <- calculate_annual_returns(msci_data)
 
+# Color list
+my_colors <- c(
+  "#1F77B4", "#D62728", "#2CA02C",
+  "#FF7F0E", "#9467BD", "#8C564B"
+)
+
 # Plot monthly returns
-jpeg("img/monthly_returns_plot.jpg", width = 1920, height = 1080)
-plot(monthly_returns_df$Date, monthly_returns_df[[2]], type = "l", col = "blue",
-     xlab = "Date", ylab = "Monthly Returns (%)", main = "Monthly Returns")
+jpeg("img/monthly_returns_plot.jpg", width = 1000, height = 1000)
+plot(monthly_returns_df$Date, monthly_returns_df[[2]],
+  main = "Monthly Returns",
+  xlab = "Date", ylab = "Monthly Returns (%)",
+  xlim = c(min(monthly_returns_df$Date), max(monthly_returns_df$Date)),
+  ylim = c(min(monthly_returns_df[, -1], na.rm = TRUE),
+    max(monthly_returns_df[, -1], na.rm = TRUE)
+  ),
+  type = "l", col = my_colors[2], lwd = 2
+
+)
 for (i in 3:ncol(monthly_returns_df)) {
-  lines(monthly_returns_df$Date, monthly_returns_df[[i]], col = i)
+  lines(monthly_returns_df$Date, monthly_returns_df[[i]],
+    col = my_colors[i], lwd = 2
+  )
 }
-legend("topright", legend = names(monthly_returns_df)[-1], col = 2:ncol(monthly_returns_df), lty = 1)
+legend("topright",
+  legend = names(monthly_returns_df)[-1],
+  col = 2:ncol(monthly_returns_df), lty = 1
+)
 dev.off()
 
 # Plot annual returns
-jpeg("img/annual_returns_plot.jpg", width = 1920, height = 1080)
-plot(annual_returns_df$Date, annual_returns_df[[2]], type = "l", col = "blue",
-     xlab = "Date", ylab = "Annual Returns (%)", main = "Annual Returns")
+jpeg("img/annual_returns_plot.jpg", width = 1000, height = 1000)
+plot(annual_returns_df$Date, annual_returns_df[[2]],
+  main = "Annual Returns",
+  xlab = "Date", ylab = "Annual Returns (%)",
+  xlim = c(min(annual_returns_df$Date), max(annual_returns_df$Date)),
+  ylim = c(min(annual_returns_df[, -1], na.rm = TRUE),
+    max(annual_returns_df[, -1], na.rm = TRUE)
+  ),
+  type = "l", col = my_colors[2], lwd = 2
+)
 for (i in 3:ncol(annual_returns_df)) {
-  lines(annual_returns_df$Date, annual_returns_df[[i]], col = i)
+  lines(annual_returns_df$Date, annual_returns_df[[i]],
+    col = my_colors[i], lwd = 2
+  )
 }
-legend("topright", legend = names(annual_returns_df)[-1], col = 2:ncol(annual_returns_df), lty = 1)
+legend("topright",
+  legend = names(annual_returns_df)[-1],
+  col = 2:ncol(annual_returns_df), lty = 1
+)
 dev.off()
 
+
+# Correlation scatter plots
+
+# ACWI correlations plot
+my_pch <- 19
+jpeg("img/ACWI_Correlations.jpg", width = 2000, height = 2000)
+plot(monthly_returns_df$"ACWI", monthly_returns_df$"ACWI ex USA",
+  main = "ACWI correlations",
+  cex.main = 3, cex.lab = 2, cex.axis = 2,
+  xlab = "ACWI % variation", ylab = "",
+  col = my_colors[1], pch = my_pch, cex = 3
+)
+points(monthly_returns_df$"ACWI", monthly_returns_df$"EM",
+  col = my_colors[2], pch = my_pch, cex = 3
+)
+points(monthly_returns_df$"ACWI", monthly_returns_df$"EM ex CHINA",
+  col = my_colors[3], pch = my_pch, cex = 3
+)
+points(monthly_returns_df$"ACWI", monthly_returns_df$"WORLD",
+  col = my_colors[4], pch = my_pch, cex = 3
+)
+legend("topright",
+  legend = c("ACWI ex USA", "EM", "EM ex CHINA", "WORLD"),
+  col = my_colors[1:4], pch = my_pch,
+  cex = 3, pt.cex = 3
+)
+dev.off()
+
+
+# World vs EM correlations plot
+jpeg("img/WorldVSEM.jpg", width = 2000, height = 2000)
+plot(monthly_returns_df$"WORLD", monthly_returns_df$"EM",
+  main = "WORLD vs EM correlations",
+  cex.main = 3, cex.lab = 1.5, cex.axis = 2,
+  xlab = "WORLD % variation",
+  ylab = "EM % variation",
+  col = my_colors[5], pch = my_pch, cex = 3
+)
+dev.off()
